@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} - Pedido #{{ pedido.id }} - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold mb-4">{{ action }} - Pedido #{{ pedido.id }}</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block font-semibold mb-2">Data do Agendamento</label>
+                    {{ form.data_agendada }}
+                    {{ form.data_agendada.errors }}
+                </div>
+                <div>
+                    <label class="block font-semibold mb-2">Hora</label>
+                    {{ form.hora_agendada }}
+                    {{ form.hora_agendada.errors }}
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Observações</label>
+                {{ form.observacoes }}
+                {{ form.observacoes.errors }}
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4">
+                <a href="{% url 'usuarios:cliente_dashboard' %}" class="px-4 py-2 rounded bg-gray-200 text-gray-700">Cancelar</a>
+                <button type="submit" class="px-4 py-2 rounded bg-yellow-500 text-white">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}Excluir Servico - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <div class="bg-white rounded-lg shadow p-8 text-center">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">Excluir Servico</h1>
+        <p class="text-gray-600 mb-6">
+            Tem certeza que deseja remover o servico <strong>{{ servico.nome }}</strong>?
+        </p>
+
+        <form method="post" class="flex justify-center space-x-4">
+            {% csrf_token %}
+            <a href="{% url 'atelie:servico_list' %}" class="px-6 py-3 rounded bg-gray-200 text-gray-700 hover:bg-gray-300">
+                Cancelar
+            </a>
+            <button type="submit" class="px-6 py-3 rounded bg-red-600 text-white hover:bg-red-700">
+                Confirmar
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

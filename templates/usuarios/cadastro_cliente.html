@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro Cliente - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Cadastro de Cliente</h2>
+        
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.nome_completo.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Nome Completo
+                </label>
+                {{ form.nome_completo }}
+                {% if form.nome_completo.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.nome_completo.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.email.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    E-mail
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.telefone.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Telefone (DDD + 9 dígitos)
+                </label>
+                {{ form.telefone }}
+                {% if form.telefone.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.telefone.errors.0 }}</p>
+                {% endif %}
+                <p class="text-sm text-gray-500 mt-1">Exemplo: 11987654321</p>
+            </div>
+            
+            <div>
+                <label for="{{ form.password1.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Senha
+                </label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.password2.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Confirmar Senha
+                </label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="w-full bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 font-semibold">
+                Cadastrar
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center text-gray-600">
+            <p>Já tem uma conta? <a href="{% url 'usuarios:login' %}" class="text-indigo-600 hover:text-indigo-800">Fazer login</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    input[type="text"], input[type="email"], input[type="password"] {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+    }
+    input:focus {
+        outline: none;
+        ring: 2px;
+        ring-color: #6366f1;
+        border-color: transparent;
+    }
+</style>
+{% endblock %}

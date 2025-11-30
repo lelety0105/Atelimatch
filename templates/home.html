@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block title %}Home - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="text-5xl font-bold text-gray-800 mb-6">Bem-vindo ao Atelimatch</h1>
+    <p class="text-xl text-gray-600 mb-8">Sistema completo de gestão para ateliês de costura com IA generativa</p>
+    
+    <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-12">
+        <!-- Card Ateliê -->
+        <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition">
+            <h2 class="text-2xl font-bold text-indigo-600 mb-4">Sou Ateliê</h2>
+            <p class="text-gray-600 mb-6">Gerencie produtos, estoque, pedidos e crie looks incríveis com IA</p>
+            <a href="{% url 'usuarios:cadastro_atelie' %}" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 inline-block">
+                Cadastrar Ateliê
+            </a>
+        </div>
+        
+        <!-- Card Cliente -->
+        <div class="bg-white p-8 rounded-lg shadow-lg hover:shadow-xl transition">
+            <h2 class="text-2xl font-bold text-pink-600 mb-4">Sou Cliente</h2>
+            <p class="text-gray-600 mb-6">Acompanhe seus pedidos e explore ideias de looks com IA</p>
+            <a href="{% url 'usuarios:cadastro_cliente' %}" class="bg-pink-600 text-white px-6 py-3 rounded-lg hover:bg-pink-700 inline-block">
+                Cadastrar Cliente
+            </a>
+        </div>
+    </div>
+    
+    <!-- Features -->
+    <div class="mt-16 grid md:grid-cols-3 gap-6 max-w-6xl mx-auto">
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">🎨 IA Generativa</h3>
+            <p class="text-gray-600">Crie ideias de looks e peças com inteligência artificial</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">📦 Gestão Completa</h3>
+            <p class="text-gray-600">Controle produtos, estoque e pedidos em um só lugar</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow">
+            <h3 class="text-lg font-bold text-gray-800 mb-2">📊 Dashboard</h3>
+            <p class="text-gray-600">Métricas e gráficos para acompanhar seu negócio</p>
+        </div>
+    </div>
+    
+    <div class="mt-12">
+        <a href="{% url 'sobre' %}" class="text-indigo-600 hover:text-indigo-800 font-semibold">
+            Saiba mais sobre o Atelimatch →
+        </a>
+    </div>
+</div>
+{% endblock %}

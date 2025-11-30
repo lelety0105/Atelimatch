@@ -1,0 +1,93 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Atelimatch{% endblock %}</title>
+    
+    <!-- Tailwind CSS Play CDN (development mode) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography,aspect-ratio"></script>
+    
+    <!-- Chart.js para gráficos -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Suppress Tailwind Play CDN warning -->
+    <script>
+        if (window.tailwind) {
+            window.tailwind.config = {}
+        }
+    </script>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+    <!-- Navbar -->
+    <nav class="bg-indigo-600 text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <a href="{% url 'home' %}" class="text-2xl font-bold">Atelimatch</a>
+                
+                <div class="flex items-center space-x-4">
+                    {% if user.is_authenticated %}
+                        <span class="text-sm">{{ user.email }}</span>
+                        {% if user.is_atelie %}
+                            <a href="{% url 'atelie:dashboard' %}" class="hover:text-indigo-200">Dashboard</a>
+                            <a href="{% url 'atelie:produto_list' %}" class="hover:text-indigo-200">Produtos</a>
+                            <a href="{% url 'atelie:servico_list' %}" class="hover:text-indigo-200">Servicos</a>
+                            <a href="{% url 'atelie:estoque_list' %}" class="hover:text-indigo-200">Estoque</a>
+                            <a href="{% url 'atelie:pedido_list' %}" class="hover:text-indigo-200">Pedidos</a>
+                            <a href="{% url 'atelie:chats' %}" class="hover:text-indigo-200">Chats</a>
+                        {% elif user.is_cliente %}
+                            <a href="{% url 'usuarios:cliente_dashboard' %}" class="hover:text-indigo-200">Meus Pedidos</a>
+                            <a href="{% url 'usuarios:novo_pedido' %}" class="hover:text-indigo-200">Novo Pedido</a>
+                            <a href="{% url 'usuarios:meus_chats' %}" class="hover:text-indigo-200">Meus Chats</a>
+                        {% endif %}
+                        <a href="{% url 'ia:studio' %}" class="hover:text-indigo-200">Studio IA</a>
+                        <a href="{% url 'usuarios:logout' %}" class="bg-indigo-700 px-4 py-2 rounded hover:bg-indigo-800">Sair</a>
+                    {% else %}
+                        <a href="{% url 'usuarios:login' %}" class="hover:text-indigo-200">Login</a>
+                        <a href="{% url 'usuarios:cadastro_cliente' %}" class="bg-indigo-700 px-4 py-2 rounded hover:bg-indigo-800">Cadastrar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Messages -->
+    {% if messages %}
+    <div class="container mx-auto px-4 mt-4">
+        {% for message in messages %}
+        <div class="{% if message.tags == 'error' %}bg-red-100 border-red-400 text-red-700{% elif message.tags == 'success' %}bg-green-100 border-green-400 text-green-700{% elif message.tags == 'warning' %}bg-yellow-100 border-yellow-400 text-yellow-700{% else %}bg-blue-100 border-blue-400 text-blue-700{% endif %} border px-4 py-3 rounded mb-4" role="alert">
+            <span class="block sm:inline">{{ message }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- Content -->
+    <main class="container mx-auto px-4 py-8 flex-1 w-full">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-gray-300 mt-auto">
+        <div class="container mx-auto px-4 py-4 text-center text-sm">
+            <p>&copy; 2025 Atelimatch. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    
+    <!-- Microsoft Clarity -->
+    {% if not debug and CLARITY_ID %}
+    <script type="text/javascript">
+    (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+    })(window, document, "clarity", "script", "{{ CLARITY_ID }}");
+    </script>
+    {% endif %}
+    
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,63 @@
+
+{% extends 'base.html' %}
+{% block title %}IA — Ideias para Ateliês{% endblock %}
+{% block content %}
+<div class="max-w-3xl mx-auto">
+  <h1 class="text-3xl font-bold text-gray-800 mb-4">Laboratório de Ideias ({{ model_label }})</h1>
+  <p class="text-gray-600 mb-6">Converse com a IA para gerar ideias de serviços, produtos e melhorias para seu ateliê.</p>
+
+  <div class="bg-white rounded-lg shadow p-4 space-y-4">
+    <div id="chat" class="space-y-3 text-sm leading-relaxed">
+      <div class="p-3 rounded bg-gray-50">
+        <strong>IA:</strong> Bah! Me conta do teu ateliê e no que quer inovar: produto novo, processo, atendimento, parceria?
+      </div>
+    </div>
+
+    <div class="flex gap-2">
+      <input id="msg" type="text" class="flex-1 border rounded px-3 py-2" placeholder="Ex.: Quero novas ideias de kits de conserto para vender na recepção" />
+      <button id="send" class="px-4 py-2 rounded bg-blue-600 text-white">Enviar</button>
+    </div>
+    <p class="text-xs text-gray-500">Dica: peça 3 ideias com esforço baixo, 3 com impacto alto e uma sugestão de parceria local.</p>
+  </div>
+</div>
+<script>
+  const chat = document.getElementById('chat');
+  const msg = document.getElementById('msg');
+  const btn = document.getElementById('send');
+
+  function append(role, text){
+    const box = document.createElement('div');
+    box.className = 'p-3 rounded ' + (role === 'user' ? 'bg-blue-50' : 'bg-gray-50');
+    box.innerHTML = '<strong>' + (role === 'user' ? 'Você' : 'IA') + ':</strong> ' + text.replace(/\n/g,'<br>');
+    chat.appendChild(box);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  async function send(){
+    const content = msg.value.trim();
+    if(!content) return;
+    append('user', content);
+    msg.value = '';
+    btn.disabled = true; btn.innerText = 'Enviando...';
+    try{
+      const r = await fetch("{% url 'ia:chat_api' %}", {
+        method: 'POST',
+        headers: {'Content-Type':'application/json','X-CSRFToken': '{{ csrf_token }}'},
+        body: JSON.stringify({message: content})
+      });
+      const j = await r.json();
+      if(j.ok){
+        append('assistant', j.answer);
+      }else{
+        append('assistant', 'Falhou: ' + (j.error || 'erro desconhecido'));
+      }
+    }catch(e){
+      append('assistant', 'Deu ruim na rede. Tenta de novo daqui a pouco.');
+    }finally{
+      btn.disabled = false; btn.innerText = 'Enviar';
+    }
+  }
+  btn.addEventListener('click', send);
+  msg.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ send(); }});
+</script>
+{% endblock %}

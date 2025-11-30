@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Meus Pedidos - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto">
+    <div class="flex items-center justify-between mb-8">
+        <h1 class="text-4xl font-bold text-gray-800">Meus Pedidos</h1>
+        <a href="{% url 'usuarios:novo_pedido' %}" class="bg-indigo-600 text-white px-5 py-3 rounded-lg hover:bg-indigo-700">
+            + Novo Pedido
+        </a>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6 mb-8">
+        <h2 class="text-2xl font-bold text-gray-700 mb-4">Resumo</h2>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-blue-50 p-4 rounded-lg">
+                <p class="text-blue-600 font-semibold">Total de Pedidos</p>
+                <p class="text-3xl font-bold text-blue-800">{{ total_pedidos }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-6">
+        <h2 class="text-2xl font-bold text-gray-700 mb-4">Pedidos Recentes</h2>
+        
+        {% if pedidos %}
+        <div class="overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ateliê</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Itens</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Agendamento</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Valor</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for pedido in pedidos %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4 text-sm text-gray-900">#{{ pedido.id }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ pedido.atelie.nome_fantasia }}</td>
+                        <td class="px-6 py-4 text-sm">
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                {% if pedido.status == 'CRIADO' %}bg-yellow-100 text-yellow-800
+                                {% elif pedido.status == 'EM_PRODUCAO' %}bg-blue-100 text-blue-800
+                                {% elif pedido.status == 'PRONTO' %}bg-green-100 text-green-800
+                                {% elif pedido.status == 'ENTREGUE' %}bg-gray-100 text-gray-800
+                                {% endif %}">
+                                {{ pedido.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">
+                            {% for item in pedido.itens.all %}
+                                <div>{{ item.descricao_item }} ({{ item.qtde }})</div>
+                            {% endfor %}
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-900">{{ pedido.agendamento_formatado }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-900">R$ {{ pedido.valor_total|floatformat:2|intcomma }}</td>
+                        <td class="px-6 py-4 text-sm">
+                            <a href="{% url 'atelie:pedido_chat' pedido.id %}" class="text-indigo-600 hover:text-indigo-900">Abrir Chat</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <p class="text-gray-500 text-center py-8">Você ainda não tem pedidos.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

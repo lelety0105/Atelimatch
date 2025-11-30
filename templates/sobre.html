@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Sobre - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+    <h1 class="text-4xl font-bold text-gray-800 mb-6">Sobre o Atelimatch</h1>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-bold text-indigo-600 mb-4">Nossa Missão</h2>
+        <p class="text-gray-700 mb-4">
+            O Atelimatch é uma plataforma completa de gestão para ateliês de costura, desenvolvida com tecnologias modernas
+            e inteligência artificial para facilitar o dia a dia de costureiras e empreendedores da moda.
+        </p>
+        <p class="text-gray-700">
+            Nosso objetivo é democratizar o acesso a ferramentas profissionais de gestão e criação, permitindo que
+            pequenos e médios ateliês possam competir com grandes empresas do setor.
+        </p>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8 mb-8">
+        <h2 class="text-2xl font-bold text-indigo-600 mb-4">Funcionalidades</h2>
+        <ul class="space-y-3 text-gray-700">
+            <li class="flex items-start">
+                <span class="text-indigo-600 mr-2">✓</span>
+                <span><strong>Gestão de Produtos:</strong> Cadastre e gerencie seu catálogo de produtos</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-indigo-600 mr-2">✓</span>
+                <span><strong>Controle de Estoque:</strong> Monitore quantidades e pontos de reposição</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-indigo-600 mr-2">✓</span>
+                <span><strong>Pedidos:</strong> Acompanhe pedidos desde a criação até a entrega</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-indigo-600 mr-2">✓</span>
+                <span><strong>IA Generativa:</strong> Crie ideias de looks e peças com DALL-E</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-indigo-600 mr-2">✓</span>
+                <span><strong>Dashboard:</strong> Métricas e gráficos em tempo real</span>
+            </li>
+            <li class="flex items-start">
+                <span class="text-indigo-600 mr-2">✓</span>
+                <span><strong>Auto-preenchimento de CEP:</strong> Integração com ViaCEP</span>
+            </li>
+        </ul>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-indigo-600 mb-4">Tecnologias</h2>
+        <p class="text-gray-700 mb-4">
+            Desenvolvido com Django 5.0, Python 3.11, Tailwind CSS e OpenAI DALL-E 3.
+        </p>
+        <p class="text-gray-700">
+            Projeto open source disponível no GitHub.
+        </p>
+    </div>
+</div>
+{% endblock %}
