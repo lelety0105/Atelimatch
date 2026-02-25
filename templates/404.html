@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Página não encontrada - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="text-center max-w-2xl mx-auto">
+    <h1 class="text-9xl font-bold text-indigo-600 mb-4">404</h1>
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Página não encontrada</h2>
+    <p class="text-xl text-gray-600 mb-8">
+        Desculpe, a página que você está procurando não existe ou foi movida.
+    </p>
+    
+    <div class="space-x-4">
+        <a href="{% url 'home' %}" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 inline-block">
+            Voltar para Home
+        </a>
+        <a href="{% url 'usuarios:login' %}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 inline-block">
+            Fazer Login
+        </a>
+    </div>
+    
+    <div class="mt-8">
+        <a href="mailto:suporte@Atelimatch.com" class="text-indigo-600 hover:text-indigo-800">
+            Reportar problema →
+        </a>
+    </div>
+</div>
+{% endblock %}

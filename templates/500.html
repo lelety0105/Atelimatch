@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Erro interno - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="text-center max-w-2xl mx-auto">
+    <h1 class="text-9xl font-bold text-red-600 mb-4">500</h1>
+    <h2 class="text-3xl font-bold text-gray-800 mb-6">Erro interno do servidor</h2>
+    <p class="text-xl text-gray-600 mb-8">
+        Desculpe, algo deu errado. Nossa equipe foi notificada e está trabalhando para resolver o problema.
+    </p>
+    
+    <div class="space-x-4">
+        <a href="{% url 'home' %}" class="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 inline-block">
+            Voltar para Home
+        </a>
+        <a href="javascript:location.reload()" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700 inline-block">
+            Tentar Novamente
+        </a>
+    </div>
+    
+    <div class="mt-8">
+        <a href="mailto:suporte@Atelimatch.com" class="text-red-600 hover:text-red-800">
+            Reportar problema →
+        </a>
+    </div>
+</div>
+{% endblock %}

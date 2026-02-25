@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Deletar Produto - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-red-600 mb-6">Confirmar Exclusão</h2>
+        
+        <p class="text-gray-700 mb-6">
+            Tem certeza que deseja deletar o produto <strong>{{ produto.nome }}</strong>?
+        </p>
+        
+        <form method="post" class="flex space-x-4">
+            {% csrf_token %}
+            <button type="submit" class="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700 font-semibold">
+                Sim, Deletar
+            </button>
+            <a href="{% url 'atelie:produto_list' %}" class="bg-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-400 font-semibold">
+                Cancelar
+            </a>
+        </form>
+    </div>
+</div>
+{% endblock %}

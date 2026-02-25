@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ action }} - Pedido #{{ pedido.id }} - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto">
+    <h1 class="text-3xl font-bold mb-4">{{ action }} - Pedido #{{ pedido.id }}</h1>
+
+    <div class="bg-white rounded-lg shadow p-6">
+        <div class="mb-6 border-b pb-4">
+            <h2 class="text-xl font-semibold mb-2">Resumo da solicitaВВo do cliente</h2>
+            <p class="text-sm text-gray-600">
+                <span class="font-semibold">Tipo de serviВo:</span>
+                {{ pedido.get_tipo_servico_display }}
+            </p>
+            {% if pedido.descricao_cliente %}
+            <p class="mt-2 text-sm text-gray-700 whitespace-pre-line">
+                {{ pedido.descricao_cliente }}
+            </p>
+            {% endif %}
+        </div>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <div>
+                <label class="block font-semibold mb-2">Valor orВado</label>
+                {{ form.valor_orcado }}
+                {{ form.valor_orcado.errors }}
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Prazo de entrega</label>
+                {{ form.prazo_entrega }}
+                {{ form.prazo_entrega.errors }}
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">Status</label>
+                {{ form.status }}
+                {{ form.status.errors }}
+            </div>
+
+            <div>
+                <label class="block font-semibold mb-2">ObservaВリes</label>
+                {{ form.observacoes }}
+                {{ form.observacoes.errors }}
+            </div>
+
+            <div class="flex justify-end space-x-3 pt-4">
+                <a href="{% url 'atelie:pedido_detail' pedido.id %}" class="px-4 py-2 rounded bg-gray-200 text-gray-700">Cancelar</a>
+                <button type="submit" class="px-4 py-2 rounded bg-green-600 text-white">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

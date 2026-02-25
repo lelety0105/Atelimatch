@@ -1,0 +1,13 @@
+{
+  "name": "Atelimatch",
+  "version": "1.0.0",
+  "description": "Atelimatch - Platform for sewing workshops",
+  "scripts": {
+    "tailwind:build": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css",
+    "tailwind:watch": "tailwindcss -i ./static/css/input.css -o ./static/css/output.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.0",
+    "postcss": "^8.4.31"
+  }
+}

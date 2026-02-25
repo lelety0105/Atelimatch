@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+
+{% block title %}Cadastro Cliente - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Cadastro de Cliente</h2>
+        
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            
+            <div>
+                <label for="{{ form.nome_completo.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Nome Completo
+                </label>
+                {{ form.nome_completo }}
+                {% if form.nome_completo.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.nome_completo.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.email.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    E-mail
+                </label>
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.email.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.telefone.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Telefone (DDD + 9 dígitos)
+                </label>
+                {{ form.telefone }}
+                {% if form.telefone.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.telefone.errors.0 }}</p>
+                {% endif %}
+                <p class="text-sm text-gray-500 mt-1">Exemplo: 11987654321</p>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.cep.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        CEP
+                    </label>
+                    {{ form.cep }}
+                    {% if form.cep.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.cep.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.uf.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        UF
+                    </label>
+                    {{ form.uf }}
+                    {% if form.uf.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.uf.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.cidade.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Cidade
+                    </label>
+                    {{ form.cidade }}
+                    {% if form.cidade.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.cidade.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.bairro.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Bairro
+                    </label>
+                    {{ form.bairro }}
+                    {% if form.bairro.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.bairro.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-2 gap-4">
+                <div>
+                    <label for="{{ form.rua.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        Rua / Logradouro
+                    </label>
+                    {{ form.rua }}
+                    {% if form.rua.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.rua.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.numero.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                        N°
+                    </label>
+                    {{ form.numero }}
+                    {% if form.numero.errors %}
+                        <p class="text-red-600 text-sm mt-1">{{ form.numero.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <label for="{{ form.complemento.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Complemento (opcional)
+                </label>
+                {{ form.complemento }}
+                {% if form.complemento.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.complemento.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.password1.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Senha
+                </label>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password1.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <div>
+                <label for="{{ form.password2.id_for_label }}" class="block text-gray-700 font-semibold mb-2">
+                    Confirmar Senha
+                </label>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <p class="text-red-600 text-sm mt-1">{{ form.password2.errors.0 }}</p>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="w-full bg-pink-600 text-white py-3 rounded-lg hover:bg-pink-700 font-semibold">
+                Cadastrar
+            </button>
+        </form>
+        
+        <div class="mt-6 text-center text-gray-600">
+            <p>Já tem uma conta? <a href="{% url 'usuarios:login' %}" class="text-indigo-600 hover:text-indigo-800">Fazer login</a></p>
+        </div>
+    </div>
+</div>
+
+<style>
+    input[type="text"], input[type="email"], input[type="password"] {
+        width: 100%;
+        padding: 0.5rem 1rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+    }
+    input:focus {
+        outline: none;
+        ring: 2px;
+        ring-color: #6366f1;
+        border-color: transparent;
+    }
+</style>
+{% endblock %}

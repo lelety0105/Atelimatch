@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+
+{% block title %}Mapa de Ateliês - Atelimatch{% endblock %}
+
+{% block content %}
+<div class="w-full">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-4xl font-bold mb-2">Encontre Ateliês Perto de Você</h1>
+            <p class="text-indigo-100">Veja no mapa todos os ateliês cadastrados com localização</p>
+        </div>
+    </div>
+    
+    <!-- Mapa e Lista -->
+    <div class="max-w-7xl mx-auto px-4 py-8">
+        <div class="grid md:grid-cols-4 gap-6">
+            <!-- Lista de Ateliês -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-bold text-gray-800 mb-4">Ateliês</h2>
+                <p class="text-sm text-gray-500 mb-4">
+                    Selecione um ateliê na lista ou clique diretamente no mapa.
+                </p>
+                <div id="lista-atelies" class="space-y-4 max-h-96 overflow-y-auto">
+                    <!-- Lista será preenchida via JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Mapa -->
+            <div class="md:col-span-3">
+                <div id="mapa" style="height: 600px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Leaflet CSS e JS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// URL base para o fluxo de agendamento de pedido
+const urlNovoPedidoBase = "{% url 'usuarios:novo_pedido' %}";
+
+// Variáveis globais
+let mapa = null;
+let marcadores = [];
+let ateliesData = [];
+let localizacaoUsuario = null;
+let marcadorUsuario = null;
+
+// Inicializar mapa
+function inicializarMapa() {
+    // Centro inicial (Brasil)
+    mapa = L.map('mapa').setView([-14.2350, -51.9253], 4);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 18,
+    }).addTo(mapa);
+    
+    // Tentar obter localização do usuário (apenas para mostrar no mapa)
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            function(position) {
+                localizacaoUsuario = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                
+                marcadorUsuario = L.circleMarker([localizacaoUsuario.lat, localizacaoUsuario.lng], {
+                    radius: 8,
+                    fillColor: '#4F46E5',
+                    color: '#fff',
+                    weight: 2,
+                    opacity: 1,
+                    fillOpacity: 0.8
+                }).addTo(mapa);
+                
+                marcadorUsuario.bindPopup('Sua localização');
+                mapa.setView([localizacaoUsuario.lat, localizacaoUsuario.lng], 12);
+            },
+            function(error) {
+                console.log('Erro ao obter localização:', error);
+            }
+        );
+    }
+}
+
+// Carregar ateliês do backend
+async function carregarAtelies() {
+    try {
+        const response = await fetch('{% url "usuarios:api_atelies_mapa" %}');
+        const data = await response.json();
+        
+        if (data.success) {
+            ateliesData = data.atelies;
+            adicionarMarcadores(ateliesData);
+            atualizarListaAtelies(ateliesData);
+        } else {
+            console.error('Erro na API de ateliês:', data.error);
+            alert('Erro ao carregar ateliês. Tente novamente.');
+        }
+    } catch (error) {
+        console.error('Erro ao carregar ateliês:', error);
+        alert('Erro ao carregar ateliês. Tente novamente.');
+    }
+}
+
+// Adicionar marcadores no mapa
+function adicionarMarcadores(atelies) {
+    // Limpar marcadores antigos
+    marcadores.forEach(marker => mapa.removeLayer(marker));
+    marcadores = [];
+
+    const bounds = L.latLngBounds([]);
+    
+    atelies.forEach(atelie => {
+        if (atelie.latitude && atelie.longitude) {
+            const marker = L.marker([atelie.latitude, atelie.longitude], {
+                title: atelie.nome
+            }).addTo(mapa);
+            
+            bounds.extend([atelie.latitude, atelie.longitude]);
+            
+            const popupContent = `
+                <div class="font-semibold text-indigo-600">${atelie.nome}</div>
+                <div class="text-sm text-gray-600 mt-1">
+                    <p><strong>Especialidades:</strong> ${atelie.especialidades || 'Não informado'}</p>
+                    <p><strong>Telefone:</strong> ${atelie.telefone || '-'}</p>
+                    <p><strong>Endereço:</strong> ${atelie.endereco || '-'}</p>
+                    <button class="mt-2 inline-flex items-center px-3 py-1 rounded bg-indigo-600 text-white text-xs font-semibold"
+                            onclick="window.location.href='${urlNovoPedidoBase}?atelie_id=${atelie.id}'">
+                        Agendar pedido
+                    </button>
+                </div>
+            `;
+            
+            marker.bindPopup(popupContent);
+            marker.on('click', function() {
+                destacarAtelieNaLista(atelie.id);
+                marker.openPopup();
+            });
+            marker.on('mouseover', function() {
+                marker.openPopup();
+            });
+            
+            marcadores.push(marker);
+        }
+    });
+
+    // Ajustar o mapa para mostrar todos os marcadores
+    if (atelies.length > 0 && bounds.isValid()) {
+        mapa.fitBounds(bounds, { padding: [20, 20] });
+    }
+}
+
+// Atualizar lista de ateliês
+function atualizarListaAtelies(atelies) {
+    const lista = document.getElementById('lista-atelies');
+    lista.innerHTML = '';
+    
+    if (atelies.length === 0) {
+        lista.innerHTML = '<p class="text-gray-600 text-center py-4">Nenhum ateliê com coordenadas cadastrado.</p>';
+        return;
+    }
+    
+    atelies.forEach(atelie => {
+        const item = document.createElement('div');
+        item.className = 'border border-gray-200 rounded-lg p-3 hover:border-indigo-500 cursor-pointer transition atelie-item';
+        item.dataset.atelieId = atelie.id;
+        item.innerHTML = `
+            <h3 class="font-semibold text-indigo-600 mb-1">${atelie.nome}</h3>
+            <p class="text-xs text-gray-600 mb-1">${atelie.endereco}</p>
+            <p class="text-xs text-gray-600">${atelie.telefone}</p>
+        `;
+        
+        item.addEventListener('click', function() {
+            if (atelie.latitude && atelie.longitude) {
+                mapa.setView([atelie.latitude, atelie.longitude], 15);
+                destacarAtelieNaLista(atelie.id);
+            }
+        });
+        
+        lista.appendChild(item);
+    });
+}
+
+// Destacar ateliê na lista
+function destacarAtelieNaLista(atelieId) {
+    document.querySelectorAll('.atelie-item').forEach(el => {
+        el.classList.remove('bg-indigo-100', 'border-indigo-500');
+    });
+    
+    const item = document.querySelector(`[data-atelie-id="${atelieId}"]`);
+    if (item) {
+        item.classList.add('bg-indigo-100', 'border-indigo-500');
+        item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+// Inicializar quando a página carregar
+document.addEventListener('DOMContentLoaded', function() {
+    inicializarMapa();
+    carregarAtelies();
+});
+</script>
+
+{% endblock %}
+
